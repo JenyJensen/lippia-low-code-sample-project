@@ -2,14 +2,14 @@
 Feature: Projects in Clockify
 
   Background:
+    Given base url https://api.clockify.me/api
     And header Content-Type = application/json
     And header Accept = */*
-    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
 
   @AddNewProject
   Scenario: Add a new project.
-    Given base url https://api.clockify.me/api
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects
+    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And body jsons/bodies/bodyAddProject.json
     When execute method POST
     Then the status code should be 201
@@ -19,7 +19,7 @@ Feature: Projects in Clockify
 
   @FindProjectById
   Scenario: Find project by ID.
-    Given base url https://api.clockify.me/api
+    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/681949a23e62a459a1c6ea96
     When execute method GET
     Then the status code should be 200
@@ -29,7 +29,7 @@ Feature: Projects in Clockify
   @UpdateProject
     Scenario: Update project on workspace
     Given call ClockifyProject.feature@AddNewProject
-    And base url https://api.clockify.me/api
+    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/{{projectId}}
     And body jsons/bodies/bodyUpdateProject.json
     When execute method PUT
@@ -39,59 +39,39 @@ Feature: Projects in Clockify
   @DeleteProject
   Scenario: Delete project from workspace
     Given call ClockifyProject.feature@UpdateProject
-    And base url https://api.clockify.me/api
+    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/{{projectId}}
     When execute method DELETE
     Then the status code should be 200
 
-  Scenario Outline: Get character
-    Given base url $(env.base_url_rickAndMorty)
-    And endpoint character/<id_character>
-    When execute method GET
-    Then the status code should be 200
-    And response should be $.name = <name>
-    And response should be $.status = <status>
-    And validate schema jsons/schemas/character.json
+    @FallaAddNewProject
+    Scenario Outline: crack Add new project for <reason>
+      And endpoint /v1/workspaces/<workspaceId>/projects
+      And header x-api-key = <api-key>
+      * define body = jsons/bodies/bodyAddProject.json
+      And set value <name> of key name in body $(body)
+      And body <body>
+      When execute method POST
+      Then the status code should be <status-code>
+      Examples:
+      |reason|workspaceId|api-key|name|body|status-code|
+      |empty workspaceId||NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"Proyecto BAT error"|$(body)|403|
+      |null workspaceId |null|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"Proyecto BAT error"|$(body)|403|
+      |incomplete workspaceId|680ab99aaf0c792d89b73|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"Proyecto BAT error"|$(body)|403|
+#      en este caso uso un workspaceId existente, y una api-key existente pero de un usuario que no tiene permisos
+      |api-key without permissions|680ab99aaf0c792d89b73fa7|MzdjNDZlM2YtYTM4ZS00NmU3LThjNmUtNmQ4YWJiZTg5NDhl|"Proyecto BAT error"|$(body)|403|
+      |no body in request         |680ab99aaf0c792d89b73fa7|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"Proyecto BAT error"||400|
+      |empty project name         |680ab99aaf0c792d89b73fa7|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|""|$(body)|400|
+      #va a fallar porque hay un bug, se puede crear nombre del proyecto con la palabra null
+      |null project name          |680ab99aaf0c792d89b73fa7|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|null|$(body)|400|
+      |project name with one character  |680ab99aaf0c792d89b73fa7|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"T"|$(body)|400|
+      |project name with more than 250 characters|680ab99aaf0c792d89b73fa7|NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz|"diluir a 1:100.000 = 0.01 mg/ml (0.1 ml más 10 ml de SF).Administrar en 5-10 minutos.Pacientes en tratamiento con inhibidores de la monoaminooxidasa (bloquean el metabolismo de la adrenalina), antidepresivos tricíclicos (prolongan la vida media de la adrenalina), bloqueantes beta (respuesta parcial de la adrenalina), aminofilina, salbutamol IV u otros fármacos vasoconstrictoresdiluir a 1:100.000 = 0.01 mg/ml (0.1 ml más 10 ml de SF).Administrar en 5-10 minutos.Pacientes en tratamiento con inhibidores de la monoaminooxidasa (bloquean el metabolismo de la adrenalina), antidepresivos tricíclicos (prolongan la vida media de la adrenalina), bloqueantes beta (respuesta parcial de la adrenalina), aminofilina, salbutamol IV u otros fármacos vasoconstrictoresdiluir a 1:100.000 = 0.01 mg/ml (0.1 ml más 10 ml de SF).Administrar en 5-10 minutos.Pacientes en tratamiento con inhibidores de la monoaminooxidasa (bloquean el metabolismo de la adrenalina), antidepresivos tricíclicos (prolongan la vida media de la adrenalina), bloqueantes beta (respuesta parcial de la adrenalina), aminofilina, salbutamol IV u otros fármacos vasoconstrictoresdiluir a 1:100.000 = 0.01 mg/ml (0.1 ml más 10 ml de SF).Administrar en 5-10 minutos.Pacientes en tratamiento con inhibidores de la monoaminooxidasa (bloquean el metabolismo de la adrenalina), antidepresivos tricíclicos (prolongan la vida media de la adrenalina), bloqueantes beta (respuesta parcial de la adrenalina), aminofilina, salbutamol IV u otros fármacos vasoconstrictoresdiluir a 1:100.000 = 0.01 mg/ml (0.1 ml más 10 ml de SF).Administrar en 5-10 minutos.Pacientes en tratamiento con inhibidores de la monoaminooxidasa (bloquean el metabolismo de la adrenalina), antidepresivos tricíclicos (prolongan la vida media de la adrenalina), bloqueantes beta (respuesta parcial de la adrenalina), aminofilina, salbutamol IV u otros fármacos vasoconstrictoresyunosmascaracteres"|$(body)|400|
+     |empty api-key|680ab99aaf0c792d89b73fa7||"Proyecto BAT error"|$(body)|401|
+      |null api-key |680ab99aaf0c792d89b73fa7|null|"Proyecto BAT error"|$(body)|401|
+      |non-existent api-key|680ab99aaf0c792d89b73fa7|515156sgsafaiu9esf84s48ddsg|"Proyecto BAT error"|$(body)|401|
 
-    Examples:
-      | id_character | name         | status |
-      | 1            | Rick Sanchez | Alive  |
-      | 2            | Morty Smith  | Alive  |
 
-  @petstore
-  Scenario Outline: Add a new pet to the store
-    Given base url $(env.base_url_petstore)
-    And endpoint pet
-    And header accept = application/json
-    And header Content-Type = application/json
-    And body jsons/bodies/body.json
-    When execute method POST
-    Then the status code should be 200
-    And response should be name = <name>
-    And validate schema jsons/schemas/pet.json
 
-    Examples:
-      | name   |
-      | doggie |
 
-  @petstore
-  Scenario Outline: Add a new pet to the store
-    Given base url $(env.base_url_petstore)
-    And endpoint pet
-    And header accept = application/json
-    And header Content-Type = application/json
-    And delete keyValue tags[0].id in body jsons/bodies/body2.json
-    And set value 15 of key tags[1].id in body jsons/bodies/body2.json
-    And set value "tag2" of key tags[1].name in body jsons/bodies/body2.json
-    When execute method POST
-    Then the status code should be 200
-    And response should be name = <name>
-    And validate schema jsons/schemas/pet.json
-
-    Examples:
-      | name   |
-      | doggie |
-
-      
 
   

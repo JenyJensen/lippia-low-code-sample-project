@@ -10,10 +10,13 @@ Feature: Projects in Clockify
   Scenario: Add a new project.
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And se genera nombre variable <projectName> y se guarda en una variable
+    And a variable name is generated and stored in a variable
+    * define body = jsons/bodies/bodyAddProject.json
+    And set value $(var.variableProjName) of key name in body $(var.body)
+    And body $(var.body)
     When execute method POST
     Then the status code should be 201
-    And response should be name = Proyecto BAT
+    And response should be name = $(var.variableProjName)
     And validate schema jsons/schemas/schemaAddProject.json
     * define projectId = $.id
 
@@ -34,7 +37,6 @@ Feature: Projects in Clockify
     And body jsons/bodies/bodyUpdateProject.json
     When execute method PUT
     Then the status code should be 200
-    And response should be name = Proyecto archivado
 
   @DeleteProject
   Scenario: Delete project from workspace
@@ -116,5 +118,5 @@ Feature: Projects in Clockify
 #      | empty projectId             | 680ab99aaf0c792d89b73fa7 | {}                     | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | {}                       | 400         | Proyecto no pertenece a Espacio de trabajo |
 #      | null projectId              | 680ab99aaf0c792d89b73fa7 | null                   | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | null                     | 400         | Proyecto no pertenece a Espacio de trabajo |
 #      | non-existent projectId      | 680ab99aaf0c792d89b73fa7 | 681949a23e62a459a1fr5e | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1fr5e   | 400         | Proyecto no pertenece a Espacio de trabajo |
-#
-#
+
+

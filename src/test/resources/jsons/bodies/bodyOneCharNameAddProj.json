@@ -1,0 +1,22 @@
+{
+  "billable": true,
+  "clientId": "",
+  "color": "#000000",
+
+  "estimate": {
+    "estimate": "PT1H30M",
+    "type": "AUTO"
+  },
+  "hourlyRate": {
+    "amount": 20000,
+    "since": "2020-01-01T00:00:00Z"
+  },
+  "isPublic": true,
+  "memberships": [
+
+  ],
+  "name": "T",
+  "note": "",
+  "tasks": [
+  ]
+}

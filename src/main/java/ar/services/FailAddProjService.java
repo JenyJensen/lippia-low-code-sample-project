@@ -5,7 +5,7 @@ import static io.lippia.api.lowcode.JsonKeysProcessor.set;
 import static io.lippia.api.lowcode.JsonKeysProcessor.delete;
 
 
-public class FailAddProjectService {
+public class FailAddProjService {
 
     public static void generateTestBody(String bodyRequest) {
         String base = "jsons/bodies/bodyAddProject.json";

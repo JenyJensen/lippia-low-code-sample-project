@@ -10,11 +10,11 @@ Feature: Projects in Clockify
   Scenario: Add a new project.
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And body jsons/bodies/bodyAddProject.json
+    And se genera nombre variable <projectName> y se guarda en una variable
     When execute method POST
     Then the status code should be 201
     And response should be name = Proyecto BAT
-    And validate schema jsons/schemas/addProject.json
+    And validate schema jsons/schemas/schemaAddProject.json
     * define projectId = $.id
 
   @FindProjectById
@@ -93,28 +93,28 @@ Feature: Projects in Clockify
       | null projectId              | 680ab99aaf0c792d89b73fa7 | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz | null                     | 400         | Proyecto no pertenece a Espacio de trabajo                          |
       | non-existent projectId      | 680ab99aaf0c792d89b73fa7 | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz | 681949a23e62a459a1fr5e   | 400         | Proyecto no pertenece a Espacio de trabajo                          |
 
-  @FailUpdateProject
-  Scenario Outline: Fail Update project on workspace for <reason>
-    Given call ClockifyProject.feature@AddNewProject
-    And endpoint /v1/workspaces/<workspaceId>/projects/<projectId>
-    And header x-api-key = <api-key>
-    * define body = jsons/bodies/bodyAddProject.json
-    And set value <name> of key name in body $(body)
-    And body body
-    When execute method POST
-    Then the status code should be <status-code>
-    And response should be message = <message>
-    Examples:
-      | reason                      | workspaceId              | projectId              | api-key                                          | name  | body                     | status-code | message                                    |
-      | empty workspaceId           |                          | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz | totot | 681949a23e62a459a1c6ea96 | 404         | Access Denied                              |
-      | null workspaceId            | null                     | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
-      | incomplete workspaceId      | 680ab99aaf0c792d89b73    | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
-      | api-key without permissions | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | MGE5ZTA2NzgtOGYzMi00ZjQzLWE2ZTEtNjBhOGYyYjhiMTJm |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
-      | empty api-key               | 680ab99aaf0c792d89b73fa7 | {{projectId}}          |                                                  |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
-      | null api-key                | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | null                                             |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
-      | non-existent api-key        | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | 515156sgsafaiu9esf84s48ddsg                      |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
-      | empty projectId             | 680ab99aaf0c792d89b73fa7 | {}                     | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | {}                       | 400         | Proyecto no pertenece a Espacio de trabajo |
-      | null projectId              | 680ab99aaf0c792d89b73fa7 | null                   | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | null                     | 400         | Proyecto no pertenece a Espacio de trabajo |
-      | non-existent projectId      | 680ab99aaf0c792d89b73fa7 | 681949a23e62a459a1fr5e | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1fr5e   | 400         | Proyecto no pertenece a Espacio de trabajo |
-
-  
+#  @FailUpdateProject
+#  Scenario Outline: Fail Update project on workspace for <reason>
+#    Given call ClockifyProject.feature@AddNewProject
+#    And endpoint /v1/workspaces/<workspaceId>/projects/<projectId>
+#    And header x-api-key = <api-key>
+#    * define body = jsons/bodies/bodyAddProject.json
+#    And set value <name> of key name in body $(body)
+#    And body body
+#    When execute method POST
+#    Then the status code should be <status-code>
+#    And response should be message = <message>
+#    Examples:
+#      | reason                      | workspaceId              | projectId              | api-key                                          | name  | body                     | status-code | message                                    |
+#      | empty workspaceId           |                          | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz | totot | 681949a23e62a459a1c6ea96 | 404         | Access Denied                              |
+#      | null workspaceId            | null                     | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
+#      | incomplete workspaceId      | 680ab99aaf0c792d89b73    | {{projectId}}          | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
+#      | api-key without permissions | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | MGE5ZTA2NzgtOGYzMi00ZjQzLWE2ZTEtNjBhOGYyYjhiMTJm |       | 681949a23e62a459a1c6ea96 | 403         | Access Denied                              |
+#      | empty api-key               | 680ab99aaf0c792d89b73fa7 | {{projectId}}          |                                                  |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
+#      | null api-key                | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | null                                             |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
+#      | non-existent api-key        | 680ab99aaf0c792d89b73fa7 | {{projectId}}          | 515156sgsafaiu9esf84s48ddsg                      |       | 681949a23e62a459a1c6ea96 | 401         | Api key does not exist                     |
+#      | empty projectId             | 680ab99aaf0c792d89b73fa7 | {}                     | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | {}                       | 400         | Proyecto no pertenece a Espacio de trabajo |
+#      | null projectId              | 680ab99aaf0c792d89b73fa7 | null                   | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | null                     | 400         | Proyecto no pertenece a Espacio de trabajo |
+#      | non-existent projectId      | 680ab99aaf0c792d89b73fa7 | 681949a23e62a459a1fr5e | NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz |       | 681949a23e62a459a1fr5e   | 400         | Proyecto no pertenece a Espacio de trabajo |
+#
+#

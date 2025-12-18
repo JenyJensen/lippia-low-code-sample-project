@@ -1,0 +1,16 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "userId", "workspaceId", "timeInterval"],
+    "properties": {
+      "id": { "type": "string" },
+      "userId": { "type": "string" },
+      "workspaceId": { "type": "string" },
+      "timeInterval": {
+        "type": "object",
+        "required": ["start", "end", "duration"]
+      }
+    }
+  }
+}

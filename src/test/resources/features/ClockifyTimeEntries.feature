@@ -1,36 +1,37 @@
-@Projects
-Feature: Projects in Clockify
+@TimeEntries
+Feature: Time entries in Clockify
 
   Background:
     Given base url https://api.clockify.me/api
     And header Content-Type = application/json
     And header Accept = */*
 
-  @AddNewProject
-  Scenario: Add a new project.
-    And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects
+  @GetTimeEntriesByUserId
+  Scenario Outline: Get time entries for a user on workspace
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/user/<userId>/time-entries
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And a variable name is generated and stored in a variable
-    * define body = jsons/bodies/bodyAddProject.json
-    And set value $(var.variableProjName) of key name in body $(var.body)
-    And body $(var.body)
-    When execute method POST
-    Then the status code should be 201
-    And response should be name = $(var.variableProjName)
-    And validate schema jsons/schemas/schemaAddProject.json
-    * define projectId = $.id
-
-  @FindProjectById
-  Scenario: Find project by ID.
-    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/681949a23e62a459a1c6ea96
     When execute method GET
     Then the status code should be 200
-    And response should be name = reportes de errores
+    And validate schema jsons/schemas/getTimeEntriesResponse.json
+    And validate all time entries belong to same user <userId>
+    * define TimeEntryId = $[0].id
+
+Examples:
+    |userId|
+    |680ab99aaf0c792d89b73fa6|
+
+  @GetSpecificTimeEntryById
+  Scenario: Get a specific time entry on workspace.
+    And call ClockifyTimeEntries.feature@GetTimeEntriesByUserId
+    And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{TimeEntryId}}
+    When execute method GET
+    Then the status code should be 200
+    And response should be description = TPFinal
     * print response
 
-  @UpdateProject
-  Scenario: Update project on workspace
+  @AddNewTimeEntry
+  Scenario: Add a new time entry
     Given call ClockifyProject.feature@AddNewProject
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/{{projectId}}

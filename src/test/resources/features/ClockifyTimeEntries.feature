@@ -32,20 +32,23 @@ Examples:
 
   @AddNewTimeEntry
   Scenario: Add a new time entry
-    Given call ClockifyProject.feature@AddNewProject
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/{{projectId}}
-    And body jsons/bodies/bodyUpdateProject.json
-    When execute method PUT
-    Then the status code should be 200
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries
+    * define body = jsons/bodies/bodyAddNewTimeEntry.json
+   And se crea una descripcion random para el time entry
+    And set value $(var.variableDescription) of key description in body $(var.body)
+    When execute method POST
+    Then the status code should be 201
+    * print response
+    * define deleteProjectId = $.id
 
-  @DeleteProject
-  Scenario: Delete project from workspace
-    Given call ClockifyProject.feature@UpdateProject
+  @DeleteTimeEntryById
+  Scenario: Delete time entry from workspace
+    And call ClockifyTimeEntries.feature@AddNewTimeEntry
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/projects/{{projectId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{deleteProjectId}}
     When execute method DELETE
-    Then the status code should be 200
+    Then the status code should be 204
 
   @FailAddNewProject
   Scenario Outline: Fail Add new project for <reason>

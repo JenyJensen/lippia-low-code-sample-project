@@ -16,9 +16,9 @@ Feature: Time entries in Clockify
     And validate all time entries belong to same user <userId>
     * define TimeEntryId = $[0].id
 
-Examples:
-    |userId|
-    |680ab99aaf0c792d89b73fa6|
+    Examples:
+      | userId                   |
+      | 680ab99aaf0c792d89b73fa6 |
 
   @GetSpecificTimeEntryById
   Scenario: Get a specific time entry on workspace.
@@ -35,12 +35,18 @@ Examples:
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
     And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries
     * define body = jsons/bodies/bodyAddNewTimeEntry.json
-   And se crea una descripcion random para el time entry
-    And set value $(var.variableDescription) of key description in body $(var.body)
+    And se crea una descripcion random para el time entry
+    And set value $(var.changeDescription) of key description in body $(var.body)
     When execute method POST
     Then the status code should be 201
     * print response
     * define deleteProjectId = $.id
+
+    @AddTimeEntryForAnotherUser
+   Scenario: Add a new time entry for another user on workspace
+      And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
+      And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/user//time-entries
+
 
   @DeleteTimeEntryById
   Scenario: Delete time entry from workspace

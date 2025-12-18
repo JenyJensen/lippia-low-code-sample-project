@@ -42,22 +42,11 @@ Feature: Time entries in Clockify
     * print response
     * define ProjectId = $.id
 
-#    @AddTimeEntryForAnotherUser
-#   Scenario: Add a new time entry for another user on workspace
-#      And header x-api-key = MzdjNDZlM2YtYTM4ZS00NmU3LThjNmUtNmQ4YWJiZTg5NDhl
-#      And endpoint /v1/workspaces/680ab99aaf0c792d89b73fa7/user/680ab99aaf0c792d89b73fa6/time-entries
-#      * define body = jsons/bodies/bodyAddNewTimeEntry.json
-#      And set value 681949a23e62a459a1c6ea96 of key projectId in body $(var.body)
-#      And set value Time entry for another userId of key description in body $(var.body)
-#      When execute method POST
-#      Then the status code should be 201
-#      * print response
-#      * define deleteAllTimeEntriesProjectId = $.id
   @UpdateTimeEntry
-    Scenario: Update time entry on workspace
+  Scenario: Update time entry on workspace
     And call ClockifyTimeEntries.feature@AddNewTimeEntry
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
     And body jsons/bodies/bodyUpdateTimeEntry.json
     When execute method PUT
     Then the status code should be 200
@@ -67,7 +56,7 @@ And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
   Scenario: Delete time entry from workspace
     And call ClockifyTimeEntries.feature@UpdateTimeEntry
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{deleteProjectId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
     When execute method DELETE
     Then the status code should be 204
 

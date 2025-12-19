@@ -1,7 +1,6 @@
 package ar.steps;
 
 import ar.services.AddNewProjService;
-import cucumber.api.PendingException;
 import io.cucumber.java.en.And;
 
 public class AddNewProjSteps {

@@ -3,11 +3,15 @@ package ar.services;
 import com.crowdar.api.rest.APIManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.lippia.api.lowcode.steps.StepsInCommon;
+import io.lippia.api.lowcode.variables.VariablesManager;
 import org.testng.Assert;
 
 public class GetTimeEntriesService {
-    public static void validateTimeEntriesUserId(String userId) {
+    public static void
+
+    validateTimeEntriesUserId() {
+        String expectedUserId = VariablesManager.getVariable("userId").toString();
+
         try {
             Object rawResponse = APIManager.getLastResponse().getResponse();
 
@@ -25,7 +29,7 @@ public class GetTimeEntriesService {
                 Assert.assertNotNull(entry.get("userId"), "userId not found in an entry");
                 Assert.assertEquals(
                         entry.get("userId").asText(),
-                        userId,
+                        expectedUserId,
                         "Found time entry with different userId"
                 );
             }

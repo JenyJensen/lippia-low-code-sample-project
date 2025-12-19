@@ -1,7 +1,6 @@
 package ar.steps;
 
 import ar.services.FailUpdateProjService;
-import cucumber.api.PendingException;
 import io.cucumber.java.en.And;
 
 public class FailUpdateProjSteps {

@@ -25,12 +25,12 @@ Feature: Time entries in Clockify
     And validate schema jsons/schemas/getTimeEntriesResponse.json
     And validate all time entries belong to same user
     * define TimeEntryId = $[0].id
+    * print response
 
   @GetSpecificTimeEntryById
   Scenario: Get a specific time entry on workspace.
-    And call ClockifyTimeEntries.feature@GetTimeEntriesByUserId
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{TimeEntryId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/6941cb948d3fba1733ba8ab1
     When execute method GET
     Then the status code should be 200
     And response should be description = TPFinal
@@ -46,23 +46,24 @@ Feature: Time entries in Clockify
     When execute method POST
     Then the status code should be 201
     * print response
-    * define ProjectId = $.id
+    * define timeEntryId = $.id
 
   @UpdateTimeEntry
   Scenario: Update time entry on workspace
     And call ClockifyTimeEntries.feature@AddNewTimeEntry
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{timeEntryId}}
     And body jsons/bodies/bodyUpdateTimeEntry.json
     When execute method PUT
     Then the status code should be 200
+    And response should be description = Time entry modificado
     * print response
 
   @DeleteTimeEntryById
   Scenario: Delete time entry from workspace
-    And call ClockifyTimeEntries.feature@UpdateTimeEntry
+    And call ClockifyTimeEntries.feature@AddNewTimeEntry
     And header x-api-key = NjliOWFiYmUtMzc2ZC00Zjg2LWJhYzUtNWIzOTE1ZjlkYmIz
-    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{ProjectId}}
+    And endpoint /v1/workspaces/69061454f3abbe6b4e1013a4/time-entries/{{timeEntryId}}
     When execute method DELETE
     Then the status code should be 204
 

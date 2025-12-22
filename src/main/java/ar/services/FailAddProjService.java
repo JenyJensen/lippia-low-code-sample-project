@@ -10,16 +10,13 @@ public class FailAddProjService {
     public static void generateTestBody(String bodyRequest) {
         String base = "jsons/bodies/bodyAddProject.json";
 
-        // Si no hay body
         if (bodyRequest.equals("no body in request")) {
             VariablesManager.setVariable("testBody", "");
             return;
         }
 
-        // En todos los demás casos usamos el body base
         VariablesManager.setVariable("testBody", base);
 
-        // Aplicamos transformaciones según el caso
         switch (bodyRequest) {
 
             case "no project name in request":

@@ -6,14 +6,7 @@ import static io.lippia.api.lowcode.JsonKeysProcessor.set;
 
 public class FailUpdateProjService {
     public static void generatingUpdateTestBody(String updateBody) {
-        String base = "{\n" +
-                "  \"archived\": true,\n" +
-                "  \"billable\": true,\n" +
-                "  \"color\": \"#000000\",\n" +
-                "  \"isPublic\": true,\n" +
-                "  \"name\": \"Software Development\",\n" +
-                "  \"note\": \"This is a sample note for the project.\"\n" +
-                "}";
+        String base = "jsons/bodies/bodyAddProject.json";
 
         if (updateBody.equals("no body in request")) {
             VariablesManager.setVariable("updateTestBody", "");

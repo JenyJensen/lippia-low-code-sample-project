@@ -15,16 +15,13 @@ public class FailUpdateProjService {
                 "  \"note\": \"This is a sample note for the project.\"\n" +
                 "}";
 
-        // Si no hay body
         if (updateBody.equals("no body in request")) {
             VariablesManager.setVariable("updateTestBody", "");
             return;
         }
 
-        // En todos los demás casos usamos el body base
         VariablesManager.setVariable("updateTestBody", base);
 
-        // Aplicamos transformaciones según el caso
         switch (updateBody) {
 
             case "project name with less than two characters":

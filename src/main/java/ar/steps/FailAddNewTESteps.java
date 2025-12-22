@@ -8,7 +8,6 @@ public class FailAddNewTESteps {
 
     @And("generate request body (.*)$")
         public void bodyError(String bodyRequest) {
-
         FailAddTEService.generateTestBody(bodyRequest);
         }
     }

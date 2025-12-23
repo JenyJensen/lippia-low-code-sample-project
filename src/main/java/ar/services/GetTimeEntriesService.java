@@ -7,9 +7,7 @@ import io.lippia.api.lowcode.variables.VariablesManager;
 import org.testng.Assert;
 
 public class GetTimeEntriesService {
-    public static void
-
-    validateTimeEntriesUserId() {
+    public static void validateTimeEntriesUserId() {
         String expectedUserId = VariablesManager.getVariable("userId").toString();
 
         try {
